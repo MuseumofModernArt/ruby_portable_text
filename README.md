@@ -15,6 +15,10 @@ You can:
 
 This is a very early release so please open issues if something doesn't work as intended.
 
+## Docker setup
+
+Run tests,
+> docker run --rm -v ./:/gem -w /gem ruby:4.0 bash -c "bundle install --quiet && bundle exec rake test" 2>&1
 
 ## Installation
 
