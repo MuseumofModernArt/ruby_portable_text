@@ -74,6 +74,20 @@ class PortableText::Html::BlockTypes::SpanTest < Minitest::Test
     )
   end
 
+  def test_it_renders_newlines_as_br_tags
+    span = new_span(text: "Line one\nLine two\nLine three")
+    html_span = PortableText::Html::BlockTypes::Span.new(span)
+
+    assert_equal "Line one<br>Line two<br>Line three", render(html_span)
+  end
+
+  def test_it_renders_newlines_as_br_tags_with_marks
+    span = new_span(text: "Line one\nLine two", marks: ["strong"])
+    html_span = PortableText::Html::BlockTypes::Span.new(span)
+
+    assert_equal "<strong>Line one<br>Line two</strong>", render(html_span)
+  end
+
   def test_when_node_configuration_is_overriden_adds_new_node_arguments
     PortableText::Html::Config.config.span.marks[:em] = { node: :em, class: "title" }
     span = new_span(marks: ["em"])
