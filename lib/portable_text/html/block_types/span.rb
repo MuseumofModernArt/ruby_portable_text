@@ -44,6 +44,7 @@ module PortableText
 
         def render_text(value)
           return if value.nil?
+          return unless value.is_a?(String)
           return plain(value) unless value.include?("\n")
 
           parts = value.split("\n", -1)
