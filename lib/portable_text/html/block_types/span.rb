@@ -25,7 +25,7 @@ module PortableText
         # If a mark definition is not found, a Null mark definition is rendered along with an error message
         # if a mark is not found, a span tag is rendered
         def visit(node)
-          return plain(node.value) if node.child.nil?
+          return render_text(node.value) if node.child.nil?
 
           if matching_mark_def?(node.value)
             annotation = @mark_defs.find { |mark_def| mark_def.key == node.value }
@@ -39,6 +39,17 @@ module PortableText
             node_arguments = decorator.except(:node)
 
             send(mark_node, **node_arguments) { visit(node.child) }
+          end
+        end
+
+        def render_text(value)
+          return if value.nil?
+          return plain(value) unless value.include?("\n")
+
+          parts = value.split("\n", -1)
+          parts.each_with_index do |part, index|
+            plain(part)
+            br if index < parts.length - 1
           end
         end
 
