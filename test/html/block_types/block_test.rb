@@ -69,4 +69,19 @@ class PortableText::Html::BlockTypes::BlockTest < Minitest::Test
 
     PortableText::Html::Config.config.block.styles[:h1] = { node: :h1 }
   end
+
+  def test_when_a_node_override_is_given_it_replaces_the_node_derived_from_the_style
+    html_block = PortableText::Html::BlockTypes::Block.new(new_block, node_override: { node: :span, class: "title" })
+    assert_equal "<span class=\"title\"></span>", render(html_block)
+  end
+
+  def test_a_node_override_takes_precedence_over_the_list_item_node
+    html_block = PortableText::Html::BlockTypes::Block.new(new_block(listItem: true), node_override: { node: :span })
+    assert_equal "<span></span>", render(html_block)
+  end
+
+  def test_a_node_override_does_not_leak_into_blocks_built_without_one
+    render(PortableText::Html::BlockTypes::Block.new(new_block, node_override: { node: :span }))
+    assert_equal "<h1></h1>", render(PortableText::Html::BlockTypes::Block.new(new_block))
+  end
 end
