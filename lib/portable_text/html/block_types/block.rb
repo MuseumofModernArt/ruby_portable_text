@@ -5,6 +5,7 @@ module PortableText
         include Configured
 
         param :block
+        option :node_override, default: -> {}
         delegate :style, :children, :mark_defs, :list_item, to: :@block
 
         def view_template
@@ -22,6 +23,7 @@ module PortableText
 
         def node
           return @node if defined?(@node)
+          return @node = @node_override if @node_override
           return @node = config.block.styles.fetch(:li) if list_item.present?
 
           @node = config.block.styles.fetch(style&.to_sym, { node: :p })

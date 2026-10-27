@@ -280,6 +280,23 @@ h1: { node: :h1, class: "header" }
 ```
 
 
+#### Overriding the node for a single render
+
+To change the node of the text blocks for one render only, pass `node_override`. It takes the same shape as a style
+and replaces the node derived from the block style (or the list item), for every text block of that render:
+
+```ruby
+serializer = PortableText::Serializer.new(content: content, to: :html)
+html = serializer.render(node_override: { node: :span, class: "title", id: "artwork-title" })
+```
+
+Only text blocks are affected (`PortableText::Html::BlockTypes::Block` and the block types inheriting from it). Other
+block types, such as images and lists, render as usual, and the global config is left untouched.
+
+Overriding does not define any class, so it is safe to use for every request, with attributes that differ on each call.
+Custom block types that inherit from `Block` receive the override as the `node_override` option and use it in `node`.
+
+
 ### Configuring marks
 
 You can configure marks by updating the marks setting.
